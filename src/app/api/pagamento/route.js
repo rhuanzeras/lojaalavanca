@@ -1,10 +1,10 @@
 import mercadopago from "mercadopago";
 
 mercadopago.configure({
-  access_token: "APP_USR-8919716877152482-031315-d65772af8f90cd6aba4c3b0cdff791c2-3264695611"
+  access_token: process.env.MERCADO_PAGO_TOKEN
 });
 
-export async function POST(req) {
+export async function POST(req){
 
   const produto = await req.json();
 
@@ -16,7 +16,15 @@ export async function POST(req) {
         currency_id: "BRL",
         unit_price: Number(produto.preco)
       }
-    ]
+    ],
+
+    back_urls:{
+      success:"https://lojaalavanca.netlify.app/sucesso",
+      failure:"https://lojaalavanca.netlify.app/erro",
+      pending:"https://lojaalavanca.netlify.app/pendente"
+    },
+
+    auto_return:"approved"
   };
 
   const response = await mercadopago.preferences.create(preference);
